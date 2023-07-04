@@ -2,7 +2,7 @@ import { TouchableOpacity } from "react-native";
 import { Heading, HStack, Text, VStack, Icon } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 
-import { UserPhoto } from "@components/UsePhoto";
+import { UserPhoto } from "./UserPhoto";
 
 export function HomeHeader() {
   return (
@@ -20,7 +20,7 @@ export function HomeHeader() {
         </Text>
 
         <Heading color="gray.100" fontSize="md">
-          Rodrigo
+          Gabriel
         </Heading>
       </VStack>
 
