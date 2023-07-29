@@ -1,9 +1,11 @@
-import { Alert } from 'react-native';
+import { useState } from 'react';
 import { useNavigation } from "@react-navigation/native";
 import { VStack, Image, Text, Center, Heading, ScrollView, useToast } from "native-base";
 import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+
+import { useAuth } from '@hooks/useAuth';
 
 import { api } from "@services/api";
 
@@ -31,9 +33,11 @@ const signUpSchema = yup.object({
 });
 
 export function SignUp() {
+  const [isLoading, setIsLoading] = useState(false);
 
   const toast = useToast();
-  
+  const { singIn } = useAuth();
+
   const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
     resolver: yupResolver(signUpSchema),
   });
@@ -46,9 +50,14 @@ export function SignUp() {
 
   async function handleSignUp({ name, email, password }: FormDataProps) {
     try {
-      const response = await api.post('/users', { name, email, password });
-      console.log(response.data);
+      setIsLoading(true)
+
+      await api.post('/users', { name, email, password });
+      await singIn(email, password)
     } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+
       const isAppError = error instanceof AppError;
 
       const title = isAppError ? error.message : 'Não foi possível criar a conta. Tente novamente mais tarde';
@@ -63,8 +72,8 @@ export function SignUp() {
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
-        <VStack flex={1} px={10} pb={16}>
-        <Image 
+      <VStack flex={1} px={10} pb={16}>
+        <Image
           source={BackgroundImg}
           defaultSource={BackgroundImg}
           alt="Pessoas treinando"
@@ -85,11 +94,11 @@ export function SignUp() {
             Crie sua conta
           </Heading>
 
-          <Controller 
+          <Controller
             control={control}
             name="name"
             render={({ field: { onChange, value } }) => (
-              <Input 
+              <Input
                 placeholder="Nome"
                 onChangeText={onChange}
                 value={value}
@@ -98,12 +107,12 @@ export function SignUp() {
             )}
           />
 
-          <Controller 
+          <Controller
             control={control}
             name="email"
             render={({ field: { onChange, value } }) => (
-              <Input 
-                placeholder="E-mail" 
+              <Input
+                placeholder="E-mail"
                 keyboardType="email-address"
                 autoCapitalize="none"
                 onChangeText={onChange}
@@ -112,13 +121,13 @@ export function SignUp() {
               />
             )}
           />
-          
-          <Controller 
+
+          <Controller
             control={control}
             name="password"
             render={({ field: { onChange, value } }) => (
-              <Input 
-                placeholder="Senha" 
+              <Input
+                placeholder="Senha"
                 secureTextEntry
                 onChangeText={onChange}
                 value={value}
@@ -127,12 +136,12 @@ export function SignUp() {
             )}
           />
 
-          <Controller 
+          <Controller
             control={control}
             name="password_confirm"
             render={({ field: { onChange, value } }) => (
-              <Input 
-                placeholder="Confirmar a Senha" 
+              <Input
+                placeholder="Confirmar a Senha"
                 secureTextEntry
                 onChangeText={onChange}
                 value={value}
@@ -143,15 +152,16 @@ export function SignUp() {
             )}
           />
 
-          <Button 
-            title="Criar e acessar" 
+          <Button
+            title="Criar e acessar"
             onPress={handleSubmit(handleSignUp)}
+            isLoading={isLoading}
           />
         </Center>
-        
-        <Button 
-          title="Voltar para o login" 
-          variant="outline" 
+
+        <Button
+          title="Voltar para o login"
+          variant="outline"
           mt={12}
           onPress={handleGoBack}
         />

@@ -23,11 +23,11 @@ export function Home() {
     <VStack flex={1}>
       <HomeHeader />
 
-      <FlatList
+      <FlatList 
         data={groups}
         keyExtractor={item => item}
         renderItem={({ item }) => (
-          <Group
+          <Group 
             name={item}
             isActive={groupSelected.toLocaleUpperCase() === item.toLocaleUpperCase()}
             onPress={() => setGroupSelected(item)}
@@ -53,7 +53,7 @@ export function Home() {
           </Text>
         </HStack>
 
-        <FlatList
+        <FlatList 
           data={exercises}
           keyExtractor={item => item}
           renderItem={({ item }) => (
