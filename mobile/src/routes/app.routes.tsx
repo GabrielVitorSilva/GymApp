@@ -13,7 +13,7 @@ import { Profile } from '@screens/Profile';
 
 type AppRoutes = {
   home: undefined;
-  exercise: undefined;
+  exercise: { exerciseId: string };
   profile: undefined;
   history: undefined;
 }
@@ -29,7 +29,7 @@ export function AppRoutes() {
   const iconSize = sizes[6];
 
   return (
-    <Navigator screenOptions={{ 
+    <Navigator screenOptions={{
       headerShown: false,
       tabBarShowLabel: false,
       tabBarActiveTintColor: colors.green[500],
@@ -42,17 +42,17 @@ export function AppRoutes() {
         paddingTop: sizes[6]
       }
     }}>
-      <Screen 
+      <Screen
         name='home'
         component={Home}
         options={{
-          tabBarIcon: ({ color,  }) => (
+          tabBarIcon: ({ color, }) => (
             <HomeSvg fill={color} width={iconSize} height={iconSize} />
           )
         }}
       />
 
-      <Screen 
+      <Screen
         name='history'
         component={History}
         options={{
@@ -62,7 +62,7 @@ export function AppRoutes() {
         }}
       />
 
-      <Screen 
+      <Screen
         name='profile'
         component={Profile}
         options={{
@@ -72,7 +72,7 @@ export function AppRoutes() {
         }}
       />
 
-      <Screen 
+      <Screen
         name='exercise'
         component={Exercise}
         options={{ tabBarButton: () => null }}
